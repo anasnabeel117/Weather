@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anas Nabeel Khan | Real-Time Weather Dashboard</title>
+    <style>
+        :root {
+            --bg-app: #0b132b;
+            --bg-card: #1c2541;
+            --text-main: #ffffff;
+            --text-muted: #5bc0be;
+            --accent: #64dfdf;
+            --danger: #ff5555;
+            --radius: 12px;
+            --transition: all 0.25s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard-wrapper {
+            width: 100%;
+            max-width: 500px;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            color: var(--accent);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            background: var(--bg-app);
+            border: 1px solid #3a506b;
+            border-radius: var(--radius);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-box input:focus {
+            outline: 2px solid var(--accent);
+            border-color: transparent;
+        }
+
+        .search-box button {
+            background: var(--accent);
+            color: var(--bg-app);
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: var(--radius);
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-box button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* Message Display Utilities */
+        .status-msg {
+            text-align: center;
+            padding: 1rem;
+            border-radius: var(--radius);
+            display: none;
+        }
+        .status-msg.error {
+            display: block;
+            background: rgba(255, 85, 85, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        .status-msg.loading {
+            display: block;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Weather UI Metrics Layout */
+        .weather-display {
+            display: none; /* Hidden until valid data resolution arrives */
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .weather-display.active {
+            display: block;
+        }
+
+        .location-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .location-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .location-header p {
+            color: var(--text-muted);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .main-temp {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            color: var(--accent);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--bg-app);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid #3a506b;
+            text-align: center;
+        }
+
+        .metric-card span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-card strong {
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="dashboard-wrapper">
+        <h1>Real-Time Weather Engine</h1>
+
+        <form id="search-form" class="search-box" novalidate>
+            <input 
+                type="text" 
+                id="city-input" 
+                placeholder="Enter city name (e.g., Pune, Tokyo)..." 
+                aria-label="City name search input"
+                required>
+            <button type="submit">Search</button>
+        </form>
+
+        <div id="status-display" class="status-msg" aria-live="polite"></div>
+
+        <article id="weather-ui" class="weather-display">
+            <div class="location-header">
+                <h2 id="ui-city">City Name</h2>
+                <p id="ui-coords">Coordinates Data</p>
+            </div>
+
+            <div class="main-temp" id="ui-temp">--°C</div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span>Humidity</span>
+                    <strong id="ui-humidity">--%</strong>
+                </div>
+                <div class="metric-card">
+                    <span>Wind Speed</span>
+                    <strong id="ui-wind">-- km/h</strong>
+                </div>
+                <div class="metric-card">
+                    <span>Apparent Temp</span>
+                    <strong id="ui-apparent">--°C</strong>
+                </div>
+                <div class="metric-card">
+                    <span>Weather Status</span>
+                    <strong id="ui-code">Clear</strong>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <script src="weather.js"></script>
+</body>
+</html>
